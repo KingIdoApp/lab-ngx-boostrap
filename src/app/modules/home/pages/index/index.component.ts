@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-index',
@@ -10,16 +11,59 @@ import { environment } from 'src/environments/environment';
 })
 export class IndexComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, public http: HttpClient) {
+
+
+  profileForm: FormGroup;
+
+  get profileImage() {
+    return this.profileForm.get('profileImage');
+  }
+
+
+  get firstName() {
+    return this.profileForm.get('firstName');
+  }
+
+
+  get lastName() {
+    return this.profileForm.get('lastName');
+  }
+
+  constructor(private route: ActivatedRoute, public http: HttpClient, private cd: ChangeDetectorRef) {
+    this.profileForm = new FormGroup({
+      firstName: new FormControl('', Validators.required),
+      lastName: new FormControl('', Validators.required),
+      profileImage: new FormControl(null, Validators.required),
+    });
 
   }
 
   ngOnInit(): void {
-    this.http.get(`${environment.apiUrl}/flight`).subscribe(res=>{
-      console.log(res);
+    this.http.get(`${environment.apiUrl}/flight`).subscribe(res => {
+      // console.log(res);
 
     })
-    console.log(this.route.snapshot.data);
+    // this.profileForm.markAllAsTouched()
+    // console.log(this.route.snapshot.data);
+  }
+
+  onFileChange(event: any) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // need to run CD since file load runs outside of zone
+        this.cd.markForCheck();
+      };
+    }
+  }
+
+  handleSubmit() {
+    // this.profileForm.markAllAsTouched();
+    if (this.profileForm.valid) {
+      console.log(this.profileForm.value);
+    }
   }
 
 }

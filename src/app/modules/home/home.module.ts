@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { SharedModule } from '../shared/shared.module';
 import { HomeRoutingModule } from './home-routing.module';
 import { IndexComponent } from './pages/index/index.component';
 
@@ -7,7 +8,8 @@ import { IndexComponent } from './pages/index/index.component';
     IndexComponent
   ],
   imports: [
-    HomeRoutingModule
+    HomeRoutingModule,
+    SharedModule
   ]
 })
 export class HomeModule { }
