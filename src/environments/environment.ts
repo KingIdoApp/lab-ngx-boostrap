@@ -2,9 +2,17 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { UserService as MockUserSerivce } from "src/app/service/user/user.mock.service";
+import { UserService } from "src/app/service/user/user.service";
+
 export const environment = {
   production: false,
-  apiUrl: "http://www.angular.at/api"
+  apiUrl: "http://www.angular.at/api",
+  providers: [
+    {
+      provide: UserService, useClass: MockUserSerivce
+    }
+  ]
 };
 
 /*

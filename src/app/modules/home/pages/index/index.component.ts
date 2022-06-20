@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Flight } from 'src/app/models/flight.model';
 
 @Component({
   selector: 'app-index',
@@ -12,8 +13,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class IndexComponent implements OnInit {
 
 
-
   profileForm: FormGroup;
+
+  data: Flight;
 
   get profileImage() {
     return this.profileForm.get('profileImage');
@@ -35,13 +37,20 @@ export class IndexComponent implements OnInit {
       lastName: new FormControl('', Validators.required),
       profileImage: new FormControl(null, Validators.required),
     });
+    this.data = {
+      date: null,
+      delayed: false,
+      from: "",
+      id: 0,
+      to: ''
 
+    }
   }
 
   ngOnInit(): void {
-    this.http.get(`${environment.apiUrl}/flight`).subscribe(res => {
-      // console.log(res);
-
+    this.http.get(`${environment.apiUrl}/flight/1`).subscribe((res) => {
+      console.log(res);
+      this.data = res as Flight;
     })
     // this.profileForm.markAllAsTouched()
     // console.log(this.route.snapshot.data);

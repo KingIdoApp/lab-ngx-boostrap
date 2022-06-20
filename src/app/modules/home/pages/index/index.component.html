@@ -1,5 +1,6 @@
 <div class="container">
-  <p>Home Index works!</p>
+  <p>Home Index works! {{ data.to }}</p>
+
   <form [formGroup]="profileForm"  (ngSubmit)="handleSubmit()">
 
     <div class="form-group">
