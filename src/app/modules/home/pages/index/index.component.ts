@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Flight } from 'src/app/models/flight.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-index',
@@ -15,7 +16,9 @@ export class IndexComponent implements OnInit {
 
   profileForm: FormGroup;
 
-  data: Flight;
+
+  data = new BehaviorSubject({} as Flight);
+  data$ = this.data.asObservable();
 
   get profileImage() {
     return this.profileForm.get('profileImage');
@@ -37,20 +40,12 @@ export class IndexComponent implements OnInit {
       lastName: new FormControl('', Validators.required),
       profileImage: new FormControl(null, Validators.required),
     });
-    this.data = {
-      date: null,
-      delayed: false,
-      from: "",
-      id: 0,
-      to: ''
 
-    }
   }
 
   ngOnInit(): void {
     this.http.get(`${environment.apiUrl}/flight/1`).subscribe((res) => {
-      console.log(res);
-      this.data = res as Flight;
+      this.data.next(res as Flight);
     })
     // this.profileForm.markAllAsTouched()
     // console.log(this.route.snapshot.data);
